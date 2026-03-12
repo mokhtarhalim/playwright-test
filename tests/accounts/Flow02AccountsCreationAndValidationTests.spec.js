@@ -25,52 +25,53 @@ import { generateAccountData } from "../../framework/datasets/accounts/accounts.
 
 // ─── Flow 02 — Accounts Creation & Validation ───────────────────────────────
 test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
+  let page;
   let accountData;
+  let accountSteps;
 
-  // Generate unique test data once before the suite runs
-  test.beforeAll(() => {
+  // Login ONCE before all tests — shared session
+  test.beforeAll(async ({ browser }) => {
     accountData = generateAccountData();
-    console.log("Generated account data:", accountData);
-  });
+    console.log("📦 Generated account data:", accountData);
 
-  // ── Shared setup: login before each test ──────────────────────────────────
-  test.beforeEach(async ({ page }) => {
+    // Create a single shared page for all tests in this suite
+    page = await browser.newPage();
     await page.goto(ENV.baseUrl);
 
     const loginPage = new LoginPage(page);
     const mfaPage = new MFAPage(page);
-
     const loginActions = new LoginActions(loginPage, mfaPage, page);
     const mfaActions = new MFAActions(mfaPage);
     const authSteps = new AuthSteps(loginActions, mfaActions);
 
     await authSteps.loginWithMFA();
+    console.log("✅ Logged in once — session shared across all tests");
+  });
+
+  // Close the shared page after all tests
+  test.afterAll(async () => {
+    await page.close();
+  });
+
+  // Rebuild steps before each test using the shared page
+  test.beforeEach(async () => {
+    accountSteps = new AccountSteps(
+      new TopMenuActions(new TopMenuPage(page)),
+      new AccountFormActions(
+        new AccountsPage(page),
+        new AccountFormPage(page),
+        new AccountDetailPage(page),
+      ),
+    );
   });
 
   // ── Test 1: Create a new Account ─────────────────────────────────────────
-  test("CreateNewAccount", async ({ page }) => {
-    const topMenuActions = new TopMenuActions(new TopMenuPage(page));
-    const accountFormActions = new AccountFormActions(
-      new AccountsPage(page),
-      new AccountFormPage(page),
-      new AccountDetailPage(page),
-    );
-    const accountSteps = new AccountSteps(topMenuActions, accountFormActions);
-
+  test("CreateNewAccount", async () => {
     await accountSteps.createNewAccount(accountData);
   });
 
-  // ── Test 2: Validate data after creation ──────────────────────────────────
-  test("ValidateDataAfterCreation", async ({ page }) => {
-    const topMenuActions = new TopMenuActions(new TopMenuPage(page));
-    const accountFormActions = new AccountFormActions(
-      new AccountsPage(page),
-      new AccountFormPage(page),
-      new AccountDetailPage(page),
-    );
-    const accountSteps = new AccountSteps(topMenuActions, accountFormActions);
-
-    await accountSteps.createNewAccount(accountData);
+  // ── Test 2: Validate data after creation ─────────────────────────────────
+  test("ValidateDataAfterCreation", async () => {
     await accountSteps.validateAccountCreation(accountData);
   });
 });

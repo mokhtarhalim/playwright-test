@@ -4,13 +4,14 @@ class AccountFormPage {
     this.page = page;
 
     // ── Basic Info ──────────────────────────────────────────────
-    this.accountNameInput = page.getByLabel("Account Name");
-    this.accountNumberInput = page.getByLabel("Account Number");
-    this.accountSiteInput = page.getByLabel("Account Site");
-    this.phoneInput = page.getByLabel("Phone");
-    this.faxInput = page.getByLabel("Fax");
-    this.websiteInput = page.getByLabel("Website");
-
+    this.accountNameInput = page.getByRole("textbox", { name: "Account Name" });
+    this.accountNumberInput = page.getByRole("textbox", {
+      name: "Account Number",
+    });
+    this.accountSiteInput = page.getByRole("textbox", { name: "Account Site" });
+    this.phoneInput = page.getByRole("textbox", { name: "Phone" });
+    this.faxInput = page.getByRole("textbox", { name: "Fax" });
+    this.websiteInput = page.getByRole("textbox", { name: "Website" });
     // ── Picklists ───────────────────────────────────────────────
     this.typeButton = page.getByRole("combobox", { name: "Type" }).first();
     this.industryButton = page
@@ -19,26 +20,44 @@ class AccountFormPage {
     this.ratingButton = page.getByRole("combobox", { name: "Rating" }).first();
 
     // ── Billing Address ─────────────────────────────────────────
-    this.billingStreetInput = page.getByLabel("Billing Street");
-    this.billingCityInput = page.getByLabel("Billing City");
-    this.billingStateInput = page.getByLabel("Billing State/Province");
-    this.billingPostalInput = page.getByLabel("Billing Zip/Postal Code");
-    this.billingCountryInput = page.getByLabel("Billing Country");
+    this.billingStreetInput = page.getByRole("textbox", {
+      name: "Billing Street",
+    });
+    this.billingCityInput = page.getByRole("textbox", { name: "Billing City" });
+    this.billingPostalInput = page.getByRole("textbox", {
+      name: "Billing Zip/Postal Code",
+    });
+
+    this.billingStateInput = page
+      .getByRole("combobox", { name: "Billing State/Province" })
+      .first();
+    this.billingCountryInput = page
+      .getByRole("combobox", { name: "Billing Country" })
+      .first();
 
     // ── Shipping Address ────────────────────────────────────────
-    this.shippingStreetInput = page.getByLabel("Shipping Street");
-    this.shippingCityInput = page.getByLabel("Shipping City");
-    this.shippingStateInput = page.getByLabel("Shipping State/Province");
-    this.shippingPostalInput = page.getByLabel("Shipping Zip/Postal Code");
-    this.shippingCountryInput = page.getByLabel("Shipping Country");
+    this.shippingStreetInput = page.getByRole("textbox", {
+      name: "Shipping Street",
+    });
+    this.shippingCityInput = page.getByRole("textbox", {
+      name: "Shipping City",
+    });
+    this.shippingPostalInput = page.getByRole("textbox", {
+      name: "Shipping Zip/Postal Code",
+    });
+    this.shippingStateInput = page
+      .getByRole("combobox", { name: "Shipping State/Province" })
+      .first();
+    this.shippingCountryInput = page
+      .getByRole("combobox", { name: "Shipping Country" })
+      .first();
 
     // ── Form Actions ────────────────────────────────────────────
-    this.saveButton = page.getByRole("button", { name: "Save" });
-    this.cancelButton = page.getByRole("button", { name: "Cancel" });
+    this.saveButton = page.locator('button[name="SaveEdit"]');
+    this.cancelButton = page.locator('button[name="CancelEdit"]');
 
     // ── Toast notification ───────────────────────────────────────
-    this.toastMessage = page.locator(".toastMessage");
-    this.toastSuccess = page.locator(".slds-theme_success");
+    const successToast = page.getByRole("alert").filter({ hasText: "created" });
   }
 }
 
