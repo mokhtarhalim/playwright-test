@@ -25,7 +25,7 @@ class AccountFormActions {
     const count = await option.count();
 
     if (count === 0) {
-      console.log(`⚠️ No option "${value}" found — skipping`);
+      console.log(`No option "${value}" found — skipping`);
       await this.accountFormPage.page.keyboard.press("Escape");
       return;
     }
@@ -91,7 +91,7 @@ class AccountFormActions {
     });
     const actualName = await this.accountDetailPage.recordTitle.innerText();
     console.log(
-      `🔍 Record title: expected="${expectedName}" | actual="${actualName}"`,
+      `Record title: expected="${expectedName}" | actual="${actualName}"`,
     );
     return actualName.trim();
   }
@@ -117,7 +117,7 @@ class AccountFormActions {
     await field.waitFor({ state: "visible", timeout: 10000 });
     const actualValue = await field.innerText();
     console.log(
-      `🔍 [${label}]: expected="${expectedValue}" | actual="${actualValue}"`,
+      `[${label}]: expected="${expectedValue}" | actual="${actualValue}"`,
     );
     return actualValue.trim();
   }

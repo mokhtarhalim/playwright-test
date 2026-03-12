@@ -32,7 +32,7 @@ test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
   // Login ONCE before all tests — shared session
   test.beforeAll(async ({ browser }) => {
     accountData = generateAccountData();
-    console.log("📦 Generated account data:", accountData);
+    console.log("Generated account data:", accountData);
 
     // Create a single shared page for all tests in this suite
     page = await browser.newPage();
@@ -45,7 +45,7 @@ test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
     const authSteps = new AuthSteps(loginActions, mfaActions);
 
     await authSteps.loginWithMFA();
-    console.log("✅ Logged in once — session shared across all tests");
+    console.log("Logged in once — session shared across all tests");
   });
 
   // Close the shared page after all tests

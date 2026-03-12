@@ -7,12 +7,12 @@ class AccountSteps {
   }
 
   async createNewAccount(data) {
-    console.log(`📋 Creating account: ${data.accountName}`);
+    console.log(`Creating account: ${data.accountName}`);
     await this.topMenuActions.navigateTo("Accounts");
     await this.accountFormActions.openNewAccountForm();
     await this.accountFormActions.fillForm(data);
     await this.accountFormActions.saveForm();
-    console.log(`✅ Account form submitted`);
+    console.log(`Account form submitted`);
   }
 
   async validateAccountCreation(data) {
@@ -24,11 +24,11 @@ class AccountSteps {
     const titleText =
       await this.accountFormActions.accountDetailPage.recordTitle.innerText();
     console.log(
-      `🔍 Record title: expected="${data.accountName}" | actual="${titleText}"`,
+      `Record title: expected="${data.accountName}" | actual="${titleText}"`,
     );
 
     expect(titleText.trim()).toBe(data.accountName);
-    console.log("✅ Account Name validated successfully");
+    console.log("Account Name validated successfully");
   }
 }
 
