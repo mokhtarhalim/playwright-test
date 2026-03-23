@@ -2,11 +2,8 @@ class AccountsPage {
   constructor(page) {
     this.page = page;
 
-    // List view
-    this.newButton = page.getByRole("button", { name: "New" });
-
-    // List view headers (for validation)
-    this.listViewHeaders = page.locator("thead .slds-cell-fixed, thead th");
+    // New button
+    this.newButton = page.locator('//li[@data-target-selection-name="sfdc:StandardButton.Account.New"]//a[@role="button"]');
   }
 }
 

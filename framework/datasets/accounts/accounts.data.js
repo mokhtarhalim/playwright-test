@@ -38,4 +38,12 @@ const generateAccountData = () => ({
   shippingCountry: faker.location.country(),
 });
 
-export { generateAccountData, INDUSTRY_VALUES, TYPE_VALUES, RATING_VALUES };
+// Generate unique account update data (only fields being updated)
+const generateAccountUpdateData = () => ({
+  accountName: `${faker.company.name()} ${faker.string.alphanumeric(5).toUpperCase()}`,
+  phone: faker.phone.number("+1 (###) ###-####"),
+  website: faker.internet.url(),
+  industry: randomFrom(INDUSTRY_VALUES),
+});
+
+export { generateAccountData, generateAccountUpdateData, INDUSTRY_VALUES, TYPE_VALUES, RATING_VALUES };

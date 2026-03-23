@@ -11,6 +11,46 @@ class AccountFormActions {
     await this.accountFormPage.accountNameInput.waitFor({ state: "visible" });
   }
 
+  // ── Edit ─────────────────────────────────────────────────────
+  // Open edit mode from the detail page
+  async openEditAccountForm() {
+    await this.accountDetailPage.actionsMenuButton.click();
+    await this.accountDetailPage.editButton.waitFor({ state: "visible" });
+    await this.accountDetailPage.editButton.click();
+    await this.accountFormPage.accountNameInput.waitFor({ state: "visible" });
+  }
+
+  // ── Delete ───────────────────────────────────────────────────
+  async deleteAccount() {
+    // Open actions menu and click Delete
+    await this.accountDetailPage.actionsMenuButton.click();
+    await this.accountDetailPage.deleteButton.waitFor({ state: 'visible' });
+    await this.accountDetailPage.deleteButton.click();
+
+    // Wait for confirmation dialog and confirm
+    await this.accountDetailPage.deleteConfirmDialog.waitFor({ state: 'visible' });
+    await this.accountDetailPage.deleteConfirmButton.click();
+    console.log('Delete confirmed');
+  }
+
+  async validateDeletion() {
+    // Validate toast deletion appears in either English or French (i18n strategy)
+    const deletionToast = this.accountDetailPage.toastDeletion;
+    const fallbackToast = this.accountDetailPage.toastStatus;
+
+    const effectiveToast = (await deletionToast.count()) > 0 ? deletionToast : fallbackToast;
+
+    await effectiveToast.waitFor({ state: 'visible', timeout: 15000 });
+
+    const text = (await effectiveToast.innerText()).trim();
+    if (!text) {
+      throw new Error('Deletion toast appeared but had empty text');
+    }
+
+    console.log('Toast deletion message displayed after account deletion');
+  }
+
+  // ── Shared ───────────────────────────────────────────────────
   // Helper for all Lightning picklists (Type, Industry, Rating, Country, State)
   async selectPicklist(buttonLocator, value) {
     await buttonLocator.scrollIntoViewIfNeeded();
@@ -78,9 +118,38 @@ class AccountFormActions {
       await form.shippingPostalInput.fill(data.shippingPostal);
   }
 
-  // Submit the form
+  // Clear a field then fill with new value (used for updates)
+  async clearAndFill(locator, value) {
+    await locator.scrollIntoViewIfNeeded();
+    await locator.click();
+    (await locator.selectAll?.()) ?? (await locator.press("Control+a"));
+    await locator.fill(value);
+  }
+
+  // Fill only the fields being updated (clears before filling)
+  async fillUpdateForm(data) {
+    const form = this.accountFormPage;
+    if (data.accountName)
+      await this.clearAndFill(form.accountNameInput, data.accountName);
+    if (data.phone) await this.clearAndFill(form.phoneInput, data.phone);
+    if (data.website) await this.clearAndFill(form.websiteInput, data.website);
+    if (data.industry)
+      await this.selectPicklist(form.industryButton, data.industry);
+  }
+
+  // Submit the form (creation)
   async saveForm() {
     await this.accountFormPage.saveButton.click();
+    console.log("Save button clicked");
+  }
+
+  // Submit the form and reload (edit)
+  async saveFormAndReload() {
+    await this.accountFormPage.saveButton.click();
+    console.log("Save button clicked");
+    await this.accountFormPage.page.waitForTimeout(1000);
+    await this.accountFormPage.page.reload({ waitUntil: "domcontentloaded" });
+    console.log("Page reloaded");
   }
 
   // Validate the record was created by checking the page header title
@@ -96,29 +165,15 @@ class AccountFormActions {
     return actualName.trim();
   }
 
-  // Validate a specific field value on the detail page
-  async validateFieldValue(label, expectedValue) {
-    // Debug: screenshot to see what's on the page
-    await this.accountDetailPage.page.screenshot({
-      path: `debug-detail-${label}.png`,
-    });
-
-    // Debug: print all text content on the page
-    const allText = await this.accountDetailPage.page
-      .locator("records-record-layout-item, force-record-layout-item")
-      .all();
-    console.log(`Found ${allText.length} layout items`);
-    for (const item of allText) {
-      const text = await item.innerText().catch(() => "N/A");
-      console.log(` - "${text}"`);
-    }
-
-    const field = this.accountDetailPage.getFieldValue(label);
+  // Validate a specific field value on the detail page using Salesforce API field name
+  async validateFieldValue(apiName, expectedValue) {
+    const field = this.accountDetailPage.getFieldValue(apiName);
     await field.waitFor({ state: "visible", timeout: 10000 });
     const actualValue = await field.innerText();
     console.log(
-      `[${label}]: expected="${expectedValue}" | actual="${actualValue}"`,
+      `[${apiName}]: expected="${expectedValue}" | actual="${actualValue}"`,
     );
+
     return actualValue.trim();
   }
 }

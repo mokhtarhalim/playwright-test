@@ -2,16 +2,19 @@ class TopMenuPage {
   constructor(page) {
     this.page = page;
 
-    // App Launcher
-    this.appLauncherButton = page.getByRole('button', { name: 'App Launcher' });
-    this.appLauncherSearchInput = page.getByPlaceholder('Search apps and items...');
+    // App Launcher button
+    this.appLauncherButton = page.locator('//one-app-launcher-header//button[@aria-haspopup="dialog"]');
 
-    // App Launcher result item (dynamic — use method below)
+    // App Launcher search input
+    this.appLauncherSearchInput = page.locator('//one-app-launcher-search-bar//input[@type="search"]');
+
+    // App Launcher item link (dynamic — pass the data-label attribute value)
     this.appLauncherItemLink = (label) =>
-      page.getByRole('option', { name: label }).or(
-        page.locator('.slds-listbox__item').filter({ hasText: label })
-      ).first();
+      page.locator(`//one-app-launcher-menu-item//a[@role="option" and @data-label="${label}"]`);
   }
 }
 
 export default TopMenuPage;
+
+
+

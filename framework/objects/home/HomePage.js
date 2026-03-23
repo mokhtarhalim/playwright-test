@@ -1,14 +1,13 @@
 class HomePage {
   constructor(page) {
     this.page = page;
-  }
 
-  get appLauncherButton() {
-    return this.page.getByRole("button", { name: "App Launcher" });
+    // App Launcher button — confirms home page loaded successfully
+    this.appLauncherButton = page.locator('//one-app-launcher-header//button[@aria-haspopup="dialog"]');
   }
 
   async waitForPageLoad() {
-    await this.appLauncherButton.waitFor({ state: "visible", timeout: 15000 });
+    await this.appLauncherButton.waitFor({ state: 'visible', timeout: 15000 });
   }
 }
 

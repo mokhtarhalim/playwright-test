@@ -4,60 +4,77 @@ class AccountFormPage {
     this.page = page;
 
     // ── Basic Info ──────────────────────────────────────────────
-    this.accountNameInput = page.getByRole("textbox", { name: "Account Name" });
-    this.accountNumberInput = page.getByRole("textbox", {
-      name: "Account Number",
-    });
-    this.accountSiteInput = page.getByRole("textbox", { name: "Account Site" });
-    this.phoneInput = page.getByRole("textbox", { name: "Phone" });
-    this.faxInput = page.getByRole("textbox", { name: "Fax" });
-    this.websiteInput = page.getByRole("textbox", { name: "Website" });
+    this.accountNameInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Name"]//input[@name="Name"]',
+    );
+    this.accountNumberInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.AccountNumber"]//input[@name="AccountNumber"]',
+    );
+    this.accountSiteInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Site"]//input[@name="Site"]',
+    );
+    this.phoneInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Phone"]//input[@name="Phone"]',
+    );
+    this.faxInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Fax"]//input[@name="Fax"]',
+    );
+    this.websiteInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Website"]//input[@name="Website"]',
+    );
+
     // ── Picklists ───────────────────────────────────────────────
-    this.typeButton = page.getByRole("combobox", { name: "Type" }).first();
-    this.industryButton = page
-      .getByRole("combobox", { name: "Industry" })
-      .first();
-    this.ratingButton = page.getByRole("combobox", { name: "Rating" }).first();
+    this.typeButton = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Type"]//button[@role="combobox"]',
+    );
+    this.industryButton = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Industry"]//button[@role="combobox"]',
+    );
+    this.ratingButton = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.Rating"]//button[@role="combobox"]',
+    );
 
     // ── Billing Address ─────────────────────────────────────────
-    this.billingStreetInput = page.getByRole("textbox", {
-      name: "Billing Street",
-    });
-    this.billingCityInput = page.getByRole("textbox", { name: "Billing City" });
-    this.billingPostalInput = page.getByRole("textbox", {
-      name: "Billing Zip/Postal Code",
-    });
-
-    this.billingStateInput = page
-      .getByRole("combobox", { name: "Billing State/Province" })
-      .first();
-    this.billingCountryInput = page
-      .getByRole("combobox", { name: "Billing Country" })
-      .first();
+    this.billingStreetInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.BillingAddress"]//textarea[@name="street"]',
+    );
+    this.billingCityInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.BillingAddress"]//input[@name="city"]',
+    );
+    this.billingStateInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.BillingAddress"]//input[@role="combobox" and @name="province"]',
+    );
+    this.billingPostalInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.BillingAddress"]//input[@name="postalCode"]',
+    );
+    this.billingCountryInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.BillingAddress"]//input[@role="combobox" and @name="country"]',
+    );
 
     // ── Shipping Address ────────────────────────────────────────
-    this.shippingStreetInput = page.getByRole("textbox", {
-      name: "Shipping Street",
-    });
-    this.shippingCityInput = page.getByRole("textbox", {
-      name: "Shipping City",
-    });
-    this.shippingPostalInput = page.getByRole("textbox", {
-      name: "Shipping Zip/Postal Code",
-    });
-    this.shippingStateInput = page
-      .getByRole("combobox", { name: "Shipping State/Province" })
-      .first();
-    this.shippingCountryInput = page
-      .getByRole("combobox", { name: "Shipping Country" })
-      .first();
+    this.shippingStreetInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.ShippingAddress"]//textarea[@name="street"]',
+    );
+    this.shippingCityInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.ShippingAddress"]//input[@name="city"]',
+    );
+    this.shippingStateInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.ShippingAddress"]//input[@role="combobox" and @name="province"]',
+    );
+    this.shippingPostalInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.ShippingAddress"]//input[@name="postalCode"]',
+    );
+    this.shippingCountryInput = page.locator(
+      '//div[@data-target-selection-name="sfdc:RecordField.Account.ShippingAddress"]//input[@role="combobox" and @name="country"]',
+    );
 
     // ── Form Actions ────────────────────────────────────────────
-    this.saveButton = page.locator('button[name="SaveEdit"]');
-    this.cancelButton = page.locator('button[name="CancelEdit"]');
-
-    // ── Toast notification ───────────────────────────────────────
-    const successToast = page.getByRole("alert").filter({ hasText: "created" });
+    this.saveButton = page.locator(
+      '//records-form-footer//button[@name="SaveEdit"]',
+    );
+    this.cancelButton = page.locator(
+      '//records-form-footer//button[@name="CancelEdit"]',
+    );
   }
 }
 
