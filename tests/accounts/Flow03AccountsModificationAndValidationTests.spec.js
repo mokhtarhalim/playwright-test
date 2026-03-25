@@ -14,18 +14,15 @@ import AccountFormActions from "../../framework/actions/accounts/AccountFormActi
 import AuthSteps from "../../framework/steps/login/AuthSteps.js";
 import AccountSteps from "../../framework/steps/accounts/AccountSteps.js";
 import {
-  generateAccountData,
   generateAccountUpdateData,
 } from "../../framework/datasets/accounts/accounts.data.js";
 
 test.describe.serial("Flow03 - Accounts Modification And Validation", () => {
-  let accountData;
   let updateData;
   let sharedPage; // ← shared page across all tests
   let accountSteps;
 
   test.beforeAll(async ({ browser }) => {
-    accountData = generateAccountData();
     updateData = generateAccountUpdateData();
 
     // Create one shared page and login once
@@ -51,10 +48,7 @@ test.describe.serial("Flow03 - Accounts Modification And Validation", () => {
       ),
     );
 
-    // Create the account ONCE here — not in any test
-    console.log("Creating account for Flow03:", accountData.accountName);
-    await accountSteps.createNewAccount(accountData);
-    console.log("Account created — ready for edit tests");
+    console.log("Flow03 setup complete — ready to search and edit accounts");
   });
 
   test.afterAll(async () => {
@@ -63,7 +57,7 @@ test.describe.serial("Flow03 - Accounts Modification And Validation", () => {
 
   // ── Test 1: Edit the account ──────────────────────────────────
   test("EditAccount", async () => {
-    await accountSteps.editAccount(updateData);
+    await accountSteps.searchAndEditAccount(updateData);
   });
 
   // ── Test 2: Validate data after update ────────────────────────

@@ -11,6 +11,53 @@ class AccountFormActions {
     await this.accountFormPage.accountNameInput.waitFor({ state: "visible" });
   }
 
+  // Search for an account by name in the Accounts list view
+  async searchAccountByName(accountName) {
+    console.log(`Searching for account: ${accountName}`);
+
+    // Wait for the page to load
+    await this.accountsPage.page.waitForTimeout(10000);
+
+    // First check if the account is already visible in the current list
+    const accountLink = this.accountsPage.accountListItem(accountName);
+    let count = await accountLink.count();
+
+    if (count > 0) {
+      console.log(`Account "${accountName}" found in current view`);
+      await accountLink.click();
+      await this.accountDetailPage.recordTitle.waitFor({ state: "visible", timeout: 10000 });
+      return true;
+    }
+
+    // If not found, try the list view search
+    console.log('Account not in current view, trying list search...');
+    const searchInput = this.accountsPage.listViewSearchInput;
+
+    try {
+      await searchInput.waitFor({ state: "visible", timeout: 10000 });
+      await searchInput.click();
+      await searchInput.fill(accountName);
+      await searchInput.press('Enter');
+
+      // Wait for search results
+      await this.accountsPage.page.waitForTimeout(10000);
+
+      // Check again
+      count = await accountLink.count();
+      if (count > 0) {
+        console.log(`Account "${accountName}" found after search`);
+        await accountLink.click();
+        await this.accountDetailPage.recordTitle.waitFor({ state: "visible", timeout: 10000 });
+        return true;
+      }
+    } catch (error) {
+      console.log('List view search failed:', error.message);
+    }
+
+    console.log(`Account "${accountName}" not found`);
+    return false;
+  }
+
   // ── Edit ─────────────────────────────────────────────────────
   // Open edit mode from the detail page
   async openEditAccountForm() {

@@ -20,18 +20,12 @@ import AccountFormActions from "../../framework/actions/accounts/AccountFormActi
 import AuthSteps from "../../framework/steps/login/AuthSteps.js";
 import AccountSteps from "../../framework/steps/accounts/AccountSteps.js";
 
-// Dataset
-import { generateAccountData } from "../../framework/datasets/accounts/accounts.data.js";
-
 // ─── Flow 04 — Accounts Deletion ────────────────────────────────────────────
 test.describe.serial("Flow04 - Accounts Deletion", () => {
-  let accountData;
   let sharedPage;
   let accountSteps;
 
   test.beforeAll(async ({ browser }) => {
-    accountData = generateAccountData();
-
     // Create shared page and login once
     sharedPage = await browser.newPage();
     await sharedPage.goto(ENV.baseUrl);
@@ -45,7 +39,7 @@ test.describe.serial("Flow04 - Accounts Deletion", () => {
     const authSteps = new AuthSteps(loginActions, mfaActions);
     await authSteps.loginWithMFA();
 
-    // Build accountSteps once
+    // Build accountSteps once — reused across all tests
     accountSteps = new AccountSteps(
       new TopMenuActions(new TopMenuPage(sharedPage)),
       new AccountFormActions(
@@ -55,10 +49,7 @@ test.describe.serial("Flow04 - Accounts Deletion", () => {
       ),
     );
 
-    // Create account once — prerequisite for deletion
-    console.log("Creating account for Flow04:", accountData.accountName);
-    await accountSteps.createNewAccount(accountData);
-    console.log("Account created — ready for deletion test");
+    console.log("Flow04 setup complete — ready to search and delete accounts");
   });
 
   test.afterAll(async () => {
@@ -67,7 +58,7 @@ test.describe.serial("Flow04 - Accounts Deletion", () => {
 
   // ── Test 1: Delete the account ────────────────────────────────
   test("DeleteAccount", async () => {
-    await accountSteps.deleteAccount();
+    await accountSteps.searchAndDeleteAccount();
   });
 
   // ── Test 2: Validate deletion via toast ───────────────────────
