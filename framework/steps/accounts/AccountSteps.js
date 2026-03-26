@@ -12,6 +12,13 @@ class AccountSteps {
   async saveAccountDataToJson(data) {
     const now = new Date();
     const dateTimeString = now.toISOString().replace(/[:.]/g, "-").slice(0, -5); // Format: YYYY-MM-DDTHH-MM-SS
+
+    // Create date folder in DD-MM-YYYY format
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const dateFolder = `${day}-${month}-${year}`;
+
     const fileName = `NewAccount_${dateTimeString}.json`;
     const filePath = path.join(
       process.cwd(),
@@ -19,6 +26,7 @@ class AccountSteps {
       "datasets",
       "savedjson",
       "account",
+      dateFolder,
       fileName,
     );
 
@@ -42,24 +50,29 @@ class AccountSteps {
 
   // Helper method to find the latest account JSON file created today (any status)
   findLatestJsonFileToday() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    const dateFolder = `${day}-${month}-${year}`;
+
     const savedJsonDir = path.join(
       process.cwd(),
       "framework",
       "datasets",
       "savedjson",
       "account",
+      dateFolder,
     );
     if (!fs.existsSync(savedJsonDir)) {
       return null;
     }
 
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
     const files = fs
       .readdirSync(savedJsonDir)
       .filter(
         (file) => file.startsWith("NewAccount_") && file.endsWith(".json"),
       )
-      .filter((file) => file.includes(today))
       .sort()
       .reverse(); // Most recent first
 
@@ -72,24 +85,29 @@ class AccountSteps {
 
   // Helper method to find the latest active (not deleted) account JSON file created today
   findLatestActiveJsonFileToday() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    const dateFolder = `${day}-${month}-${year}`;
+
     const savedJsonDir = path.join(
       process.cwd(),
       "framework",
       "datasets",
       "savedjson",
       "account",
+      dateFolder,
     );
     if (!fs.existsSync(savedJsonDir)) {
       return null;
     }
 
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
     const files = fs
       .readdirSync(savedJsonDir)
       .filter(
         (file) => file.startsWith("NewAccount_") && file.endsWith(".json"),
       )
-      .filter((file) => file.includes(today))
       .sort()
       .reverse(); // Most recent first
 
