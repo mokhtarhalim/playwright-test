@@ -28,8 +28,14 @@ class AccountSteps {
       fs.mkdirSync(dir, { recursive: true });
     }
 
+    // Add timestamp to the data
+    const dataWithTimestamp = {
+      ...data,
+      created_at: now.toISOString(),
+    };
+
     // Write the data to JSON file
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    fs.writeFileSync(filePath, JSON.stringify(dataWithTimestamp, null, 2));
     console.log(`Account data saved to: ${filePath}`);
     return filePath;
   }
@@ -122,6 +128,9 @@ class AccountSteps {
         updatedData[`${key}_edited`] = editedData[key];
       }
     });
+
+    // Add update timestamp
+    updatedData.updated_at = new Date().toISOString();
 
     // Write back to file
     fs.writeFileSync(jsonFilePath, JSON.stringify(updatedData, null, 2));
@@ -249,8 +258,9 @@ class AccountSteps {
     // Read existing data
     const accountData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
 
-    // Add deletion flag
+    // Add deletion flag and timestamp
     accountData.deleted_from_salesforce = true;
+    accountData.deleted_at = new Date().toISOString();
 
     // Write back to file
     fs.writeFileSync(jsonFilePath, JSON.stringify(accountData, null, 2));

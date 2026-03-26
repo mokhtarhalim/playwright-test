@@ -19,6 +19,7 @@ import AccountFormActions from "../../framework/actions/accounts/AccountFormActi
 // Steps
 import AuthSteps from "../../framework/steps/login/AuthSteps.js";
 import AccountSteps from "../../framework/steps/accounts/AccountSteps.js";
+import LanguageSteps from "../../framework/steps/language/LanguageSteps.js";
 
 // Dataset
 import { generateAccountData } from "../../framework/datasets/accounts/accounts.data.js";
@@ -28,9 +29,12 @@ test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
   let page;
   let accountData;
   let accountSteps;
+  let topMenuActions; // Keep TopMenuActions in scope for all tests
 
   // Login ONCE before all tests — shared session
   test.beforeAll(async ({ browser }) => {
+    test.setTimeout(120000);
+    
     accountData = generateAccountData();
     console.log("Generated account data:", accountData);
 
@@ -46,17 +50,18 @@ test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
 
     await authSteps.loginWithMFA();
     console.log("Logged in once — session shared across all tests");
-  });
 
-  // Close the shared page after all tests
-  test.afterAll(async () => {
-    await page.close();
-  });
+    // Create one TopMenuActions instance and share it across LanguageSteps and AccountSteps
+    topMenuActions = new TopMenuActions(new TopMenuPage(page));
 
-  // Rebuild steps before each test using the shared page
-  test.beforeEach(async () => {
+    // Change language (using global test language from env)
+    const languageSteps = new LanguageSteps(topMenuActions);
+    await languageSteps.changeLanguageTo(ENV.testLanguage);
+    console.log(`Flow02 running with language: ${ENV.testLanguage}`);
+
+    // Build accountSteps with the same topMenuActions instance so language state is shared
     accountSteps = new AccountSteps(
-      new TopMenuActions(new TopMenuPage(page)),
+      topMenuActions,
       new AccountFormActions(
         new AccountsPage(page),
         new AccountFormPage(page),
@@ -65,13 +70,20 @@ test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
     );
   });
 
+  // Close the shared page after all tests
+  test.afterAll(async () => {
+    await page.close();
+  });
+
   // ── Test 1: Create a new Account ─────────────────────────────────────────
   test("CreateNewAccount", async () => {
+    test.setTimeout(60000); // 60 second timeout for account creation
     await accountSteps.createNewAccount(accountData);
   });
 
   // ── Test 2: Validate data after creation ─────────────────────────────────
   test("ValidateDataAfterCreation", async () => {
+    test.setTimeout(30000);
     await accountSteps.validateAccountCreation(accountData);
   });
 });

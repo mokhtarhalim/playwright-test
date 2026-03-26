@@ -14,7 +14,21 @@ class MFAActions {
       console.log('Generated OTP:', otp);
 
       await this.mfaPage.mfaInput.fill(otp);
+      console.log('MFA code entered, clicking verify button...');
+      
+      // Click verify button and wait for potential navigation
       await this.mfaPage.verifyButton.click();
+      
+      // Wait for any redirect/navigation to complete
+      try {
+        await this.mfaPage.mfaInput.page().waitForNavigation({ waitUntil: 'networkidle', timeout: 15000 });
+        console.log('Navigation completed after MFA verification');
+      } catch (e) {
+        console.log('Navigation check completed or no navigation needed');
+      }
+      
+      // Give the page time to fully load after redirect
+      await this.mfaPage.mfaInput.page().waitForTimeout(3000);
 
     } catch {
       // MFA input never appeared — MFA not required
