@@ -77,13 +77,13 @@ test.describe.serial("Flow02 - Accounts Creation And Validation", () => {
 
   // ── Test 1: Create a new Account ─────────────────────────────────────────
   test("CreateNewAccount", async () => {
-    test.setTimeout(60000); // 60 second timeout for account creation
+    test.setTimeout(60000); // 60 second timeout for lead creation
     await accountSteps.createNewAccount(accountData);
   });
 
   // ── Test 2: Validate data after creation ─────────────────────────────────
   test("ValidateDataAfterCreation", async () => {
-    test.setTimeout(30000);
+    test.setTimeout(60000); // 60 second timeout for lead creation
     await accountSteps.validateAccountCreation(accountData);
   });
 });

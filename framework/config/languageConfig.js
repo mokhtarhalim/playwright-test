@@ -13,7 +13,7 @@ const languageConfig = {
     },
     Leads: {
       en: "Leads",
-      fr: "Prospects",
+      fr: "Pistes",
     },
     Opportunities: {
       en: "Opportunities",

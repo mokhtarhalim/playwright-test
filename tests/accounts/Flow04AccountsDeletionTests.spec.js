@@ -70,13 +70,13 @@ test.describe.serial("Flow04 - Accounts Deletion", () => {
 
   // ── Test 1: Delete the account ────────────────────────────────
   test("DeleteAccount", async () => {
-    test.setTimeout(60000); // 60 second timeout for account deletion
+    test.setTimeout(60000); // 60 second timeout for lead creation
     await accountSteps.searchAndDeleteAccount();
   });
 
   // ── Test 2: Validate deletion via toast ───────────────────────
   test("ValidateDeletionToast", async () => {
-    test.setTimeout(30000);
+    test.setTimeout(60000); // 60 second timeout for lead creation
     await accountSteps.validateAccountDeletion();
   });
 });

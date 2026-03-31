@@ -8,7 +8,7 @@ const ENV = {
   totpSecret: process.env.TOTP_SECRET,
 
   // Global language for all tests
-  testLanguage: process.env.TEST_LANGUAGE || "English",
+  testLanguage: process.env.TEST_LANGUAGE || "Français",
 };
 
 export default ENV;

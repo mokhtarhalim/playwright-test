@@ -87,7 +87,7 @@ class AccountFormActions {
 
     const effectiveToast = (await deletionToast.count()) > 0 ? deletionToast : fallbackToast;
 
-    await effectiveToast.waitFor({ state: 'visible', timeout: 15000 });
+    await effectiveToast.waitFor({ state: 'visible', timeout: 10000 });
 
     const text = (await effectiveToast.innerText()).trim();
     if (!text) {

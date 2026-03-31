@@ -21,7 +21,7 @@ class MFAActions {
       
       // Wait for any redirect/navigation to complete
       try {
-        await this.mfaPage.mfaInput.page().waitForNavigation({ waitUntil: 'networkidle', timeout: 15000 });
+        await this.mfaPage.mfaInput.page().waitForNavigation({ waitUntil: 'networkidle', timeout: 10000 });
         console.log('Navigation completed after MFA verification');
       } catch (e) {
         console.log('Navigation check completed or no navigation needed');

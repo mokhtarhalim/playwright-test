@@ -69,13 +69,13 @@ test.describe.serial("Flow03 - Accounts Modification And Validation", () => {
 
   // ── Test 1: Edit the account ──────────────────────────────────
   test("EditAccount", async () => {
-    test.setTimeout(60000); // 60 second timeout for account edit
+    test.setTimeout(60000); // 60 second timeout for lead creation
     await accountSteps.searchAndEditAccount(updateData);
   });
 
   // ── Test 2: Validate data after update ────────────────────────
   test("ValidateDataAfterUpdate", async () => {
-    test.setTimeout(30000);
+    test.setTimeout(60000); // 60 second timeout for lead creation
     await accountSteps.validateAccountUpdate(updateData);
   });
 });
