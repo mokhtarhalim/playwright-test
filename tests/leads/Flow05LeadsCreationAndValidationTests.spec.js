@@ -68,7 +68,7 @@ test.describe.serial("Flow05 - Leads Creation And Validation", () => {
     test.setTimeout(60000); // 60 second timeout for lead creation
     await leadSteps.createNewLead(leadData);
   });
-
+  
   test("ValidateDataAfterCreation", async () => {
     test.setTimeout(60000); // 60 second timeout for validation
     await leadSteps.validateLeadCreation(leadData);

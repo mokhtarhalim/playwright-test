@@ -382,8 +382,11 @@ class LeadSteps {
     }
 
     const leadData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
-    const leadName =
-      leadData.lastName_edited || leadData.lastName || leadData.company;
+    const leadName = this.getLeadFullName({
+      firstName: leadData.firstName_edited || leadData.firstName,
+      lastName: leadData.lastName_edited || leadData.lastName,
+      company: leadData.company ||leadData.company_edited,
+    });
 
     console.log(`Found lead from JSON: ${leadName}`);
     await this.topMenuActions.navigateTo("Leads");
@@ -409,7 +412,22 @@ class LeadSteps {
     });
     const titleText =
       await this.leadFormActions.leadDetailPage.recordTitle.innerText();
-    const expectedTitle = this.getLeadFullName(data);
+
+    const jsonFilePath = this.findLatestLeadJsonFileToday();
+    let persistedLead = {}; 
+    if (jsonFilePath && fs.existsSync(jsonFilePath)) {
+      const leadJson = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
+      persistedLead = {
+        firstName: leadJson.firstName_edited || leadJson.firstName,
+        lastName: leadJson.lastName_edited || leadJson.lastName,
+      };
+    }
+
+    const expectedTitle =
+      persistedLead.firstName && persistedLead.lastName
+        ? `${persistedLead.firstName.trim()} ${persistedLead.lastName.trim()}`
+        : data.lastName || persistedLead.lastName || "";
+
     console.log(
       `Record title: expected="${expectedTitle}" | actual="${titleText}"`,
     );
@@ -435,13 +453,16 @@ class LeadSteps {
     }
 
     const leadData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
-    const leadName =
-      leadData.lastName_edited || leadData.lastName || leadData.company;
-    const wasEdited = !!leadData.lastName_edited;
+    const leadName = this.getLeadFullName({
+      firstName: leadData.firstName_edited || leadData.firstName,
+      lastName: leadData.lastName_edited || leadData.lastName,
+      company: leadData.company,
+    });
+    const wasEdited = !!(leadData.firstName_edited || leadData.lastName_edited);
 
     if (wasEdited) {
       console.log(
-        `Found edited lead from JSON: ${leadName} (was: ${leadData.lastName})`,
+        `Found edited lead from JSON: ${leadName} (was: ${this.getLeadFullName(leadData)})`,
       );
     } else {
       console.log(`Found lead from JSON: ${leadName}`);
@@ -468,8 +489,11 @@ class LeadSteps {
     }
 
     const leadData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
-    const leadName =
-      leadData.lastName_edited || leadData.lastName || leadData.company;
+    const leadName = this.getLeadFullName({
+      firstName: leadData.firstName_edited || leadData.firstName,
+      lastName: leadData.lastName_edited || leadData.lastName,
+      company: leadData.company || leadData.company_edited,
+    });
 
     await this.topMenuActions.navigateTo("Leads");
     await this.leadFormActions.leadsPage.page.waitForTimeout(2000);
