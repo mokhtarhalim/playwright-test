@@ -190,6 +190,24 @@ class ApiSteps {
     verifyNoContent(response) {
         expect(response.status).toBe(200);
     }
+
+    /**
+     * Verify resource not found (404) after DELETE
+     * @param {Object} response - API response
+     */
+    verifyResourceNotFound(response) {
+        expect(response.status).toBe(404);
+    }
+
+    /**
+     * Verify resource exists and matches expected data
+     * @param {Object} response - API response
+     * @param {Object} expectedData - Expected data to verify
+     */
+    verifyResourceMatches(response, expectedData) {
+        expect(response.status).toBe(200);
+        expect(response.data).toMatchObject(expectedData);
+    }
 }
 
 export default new ApiSteps();
