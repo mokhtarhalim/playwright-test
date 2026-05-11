@@ -1,0 +1,2 @@
+failureType;error;key;original_External Id;original_Account Name;original_Phone;extracted_External Id;extracted_Name;extracted_Phone
+unmatchedOriginal;Original row not found in extracted CSV;4;4;Aaron;888;;;
